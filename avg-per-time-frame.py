@@ -173,7 +173,14 @@ def datebreakdown():
     return time.localtime().tm_hour, time.localtime().tm_wday
 
 def threshholds(newdata, averages, args):
-    prcntdiv = (float(newdata) / float(averages)) * 100
+    try:
+        prcntdiv = (float(newdata) / float(averages)) * 100
+    except ZeroDivisionError:
+        if float(newdata) > 0:
+            prcntdiv = (float(newdata) / 0.001) * 100
+        else:
+            prcntdiv = 100
+
     if prcntdiv < args.crit[0] or prcntdiv > args.crit[1]:
         sym = '<' if prcntdiv < args.crit[0] else '>'
         minmax = args.crit[0] if prcntdiv < args.crit[0] else args.crit[1] 
